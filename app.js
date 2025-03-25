@@ -7,10 +7,12 @@ app.use(express.urlencoded({ extended: true }));
 // Configurando rotas
 const produtoRoute = require('./routes/produtoRoute');
 app.use('/produtos', produtoRoute);
-const clienteRoute = require('./routes/clienteRoute');
-app.use('/clientes', clienteRoute);
 const vendedorRoute = require('./routes/vendedorRoute');
 app.use('/vendedores', vendedorRoute);
+const clienteRoute = require('./routes/clienteRoute');
+app.use('/clientes', clienteRoute);
+const vendasRoute  = require('./routes/vendaRoute')
+app.use('/vendas', vendasRoute);
 
 // Porta de execução
 const PORT = process.env.PORT || 3000;
