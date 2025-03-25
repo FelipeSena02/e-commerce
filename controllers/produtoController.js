@@ -4,11 +4,8 @@ const prisma = new PrismaClient();
 exports.getAllProducts = async (req, res) => {
     try {
         const produtos = await prisma.produto.findMany();
-<<<<<<< HEAD
         res.status(200).json(produtos);
-=======
         res.render('produtos', { produtos });
->>>>>>> frontend
     } catch (error) {
         res.status(500).json({ error: 'Erro ao buscar os produtos' });
     }
@@ -66,9 +63,6 @@ exports.deleteProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Erro ao deletar o produto' });
     }
-<<<<<<< HEAD
-};
-=======
+
 };
 
->>>>>>> frontend
