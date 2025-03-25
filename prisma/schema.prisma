@@ -7,6 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> frontend
 model Produto {
   id                Int         @id @default(autoincrement())
   nome              String
@@ -16,6 +20,8 @@ model Produto {
   quantidadeEstoque Int
   categoria         String
   itensVenda        ItemVenda[]
+<<<<<<< HEAD
+=======
 }
 
 model Cliente {
@@ -56,4 +62,69 @@ model ItemVenda {
   produto       Produto @relation(fields: [idProduto], references: [id])
   quantidade    Int
   precoUnitario Float
+=======
+model produtos {
+  id                    Int          @id @default(autoincrement())
+  nome                  String 
+  imagem                String?
+  descricao             String     
+  preco                 Float
+  quantidade_estoque    Int
+  categoria             String
+  itensVenda            ItensVenda[]
+>>>>>>> frontend
+}
+
+model Cliente {
+  id       Int     @id @default(autoincrement())
+  nome     String
+  idade    Int
+  email    String  @unique
+  endereco String
+  telefone String
+  vendas   Venda[]
+}
+
+model Vendedor {
+  id       Int     @id @default(autoincrement())
+  nome     String
+  idade    Int
+  email    String  @unique
+  telefone String
+  Venda    Venda[]
+}
+
+model Venda {
+  id         Int         @id @default(autoincrement())
+  idCliente  Int
+  cliente    Cliente     @relation(fields: [idCliente], references: [id])
+  idVendedor Int
+  vendedor   Vendedor    @relation(fields: [idVendedor], references: [id])
+  itensVenda ItemVenda[]
+  dataVenda  DateTime    @default(now())
+  total      Float
+}
+
+<<<<<<< HEAD
+model ItemVenda {
+  id            Int     @id @default(autoincrement())
+  idVenda       Int
+  venda         Venda   @relation(fields: [idVenda], references: [id])
+  idProduto     Int
+  produto       Produto @relation(fields: [idProduto], references: [id])
+  quantidade    Int
+  precoUnitario Float
+=======
+model itensVenda{
+  id             Int          @id @default(autoincrement())
+  id_venda       Int 
+  venda          Vendas @relation(fields: [id_venda], references: [id])
+  id_produto     Int 
+  produto        Produtos @relation(fields: [id_produto], references: [id])
+  quantidade     Int
+  precoUnitario  Float
+  
+
+>>>>>>> bc7af70cbdeec5828e549d92db0fcb710af383a6
+>>>>>>> frontend
 }
