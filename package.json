@@ -12,7 +12,10 @@
   "dependencies": {
     "@prisma/client": "^6.5.0",
     "axios": "^1.8.4",
+<<<<<<< HEAD
     "e-commerce": "file:",
+=======
+>>>>>>> bc7af70cbdeec5828e549d92db0fcb710af383a6
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "prisma": "^6.5.0"
