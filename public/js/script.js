@@ -22,3 +22,5 @@ window.addEventListener('load', setActiveLink);
 // Aplica a função se a navegação for do tipo SPA (Single Page Application)
 window.addEventListener('popstate', setActiveLink);
 
+
+
