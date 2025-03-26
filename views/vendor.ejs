@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,18 +68,23 @@
         #menu a.active .menu-icon {
             content: url("/images/home 1.svg");
         }
+
         #menu a.active .menu-icon2 {
             content: url("/images/vend 1.svg");
         }
+
         #menu a.active .menu-icon3 {
             content: url("/images/prod 1.svg");
         }
+
         #menu a.active .menu-icon4 {
             content: url("/images/client 1.svg");
         }
+
         #menu a.active .menu-icon5 {
             content: url("/images/vendedor 1.svg");
         }
+
         #menu a.active .menu-icon6 {
             content: url("/images/sobre 1.svg");
         }
@@ -111,32 +117,99 @@
         }
 
         .form-container button {
-            padding: 10px;
-            background-color: #333;
+            padding: 8px 15px;
+            background-color: #CE67B7;
             color: #fff;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-container button:hover {
+            background-color: #d133e3;
         }
 
-        .product-list {
-            margin: 20px 0;
+        .vendor-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            /* Diminui o espaço entre os cards */
+            justify-content: flex-start;
+            margin-top: 20px;
         }
 
-        .product-item {
+
+        .vendor-item {
+            background-color: #fff;
             border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .product-item button {
-            margin-right: 10px;
-            padding: 5px 10px;
-            background-color: #333;
+        .vendor-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .vendor-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .vendor-item p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .vendor-item button {
+            padding: 8px 15px;
+            background-color: #CE67B7;
             color: #fff;
             border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .vendor-item button:hover {
+            background-color: #d133e3;
+        }
+
+
+        /* Estilizando os campos de texto */
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            background-color: white;
+            border: none;
+            padding: 15px;
+            margin-bottom: 10px;
+            width: 100%;
+            border-radius: 5px;
+            outline: none;
+            width: 100%;
+            max-height: 200px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            box-sizing: border-box;
+            resize: vertical;
+
+        }
+
+        textarea {
+            max-height: 200px;
+            min-height: 100px;
         }
     </style>
 </head>
+
 <body>
     <div id="menu">
         <h2>PERFUMARIA</h2>
@@ -177,19 +250,24 @@
 
         <!-- Lista de vendedores -->
         <div class="vendor-list" id="vendorList">
-            <% if (vendedores.length > 0) { %>
-                <% vendedores.forEach(vendedor => { %>
+            <% if (vendedores.length> 0) { %>
+                <% vendedores.forEach(vendedor=> { %>
                     <div class="vendor-item">
-                        <p><strong><%= vendedor.nome %></strong></p>
-                        <p>Descrição: <%= vendedor.idade %></p>
-                        <p>Preço: <%= vendedor.email %></p>
-                        <p>Categoria: <%= vendedor.telefone %></p>
+                        <p><strong>
+                                <%= vendedor.nome %>
+                            </strong></p>
+                        <p>Descrição: <%= vendedor.idade %>
+                        </p>
+                        <p>Preço: <%= vendedor.email %>
+                        </p>
+                        <p>Categoria: <%= vendedor.telefone %>
+                        </p>
                         <button onclick="deleteVendor(vendedor.id)">Deletar</button>
                     </div>
-                <% }); %>
-            <% } else { %>
-                <p>Nenhum vendedor encontrado.</p>
-            <% } %>
+                    <% }); %>
+                        <% } else { %>
+                            <p>Nenhum vendedor encontrado.</p>
+                            <% } %>
         </div>
     </div>
 
@@ -219,28 +297,28 @@
         }
 
         document.getElementById('createVendorForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
 
-            if (!response.ok) {
-                throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
+                }
+
+                e.target.reset();
+                fetchVendors();
+            } catch (error) {
+                console.error('Erro ao criar vendedor:', error);
+                alert('Erro ao criar o vendedor. Verifique os dados e tente novamente.');
             }
-
-            e.target.reset();
-            fetchVendors();
-        } catch (error) {
-            console.error('Erro ao criar vendedor:', error);
-            alert('Erro ao criar o vendedor. Verifique os dados e tente novamente.');
-        }
         });
 
         // Função para deletar vendedor
@@ -254,4 +332,5 @@
     </script>
     <script src="/js/script.js"></script>
 </body>
+
 </html>

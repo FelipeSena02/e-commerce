@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,18 +68,23 @@
         #menu a.active .menu-icon {
             content: url("/images/home 1.svg");
         }
+
         #menu a.active .menu-icon2 {
             content: url("/images/vend 1.svg");
         }
+
         #menu a.active .menu-icon3 {
             content: url("/images/prod 1.svg");
         }
+
         #menu a.active .menu-icon4 {
             content: url("/images/client 1.svg");
         }
+
         #menu a.active .menu-icon5 {
             content: url("/images/vendedor 1.svg");
         }
+
         #menu a.active .menu-icon6 {
             content: url("/images/sobre 1.svg");
         }
@@ -118,25 +124,119 @@
             cursor: pointer;
         }
 
-        .product-list {
+        .form-container button {
+            padding: 12px 20px;
+            background-color: #CE67B7;
+            /* Cor de fundo do botão */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            /* Bordas arredondadas */
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 25%;
+            /* Ocupa toda a largura disponível */
+            margin-top: 20px;
+        }
+
+        .form-container button:hover {
+            background-color: #d133e3;
+            /* Cor de fundo quando o mouse passa por cima */
+            transform: scale(1.05);
+            /* Efeito de aumento */
+        }
+
+        .form-container button:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            /* Efeito de foco */
+        }
+
+        .form-container {
             margin: 20px 0;
         }
 
-        .product-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
+        .client-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;;
+            margin-top: 20px;
         }
 
-        .product-item button {
-            margin-right: 10px;
-            padding: 5px 10px;
-            background-color: #333;
+        .client-item {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .client-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .client-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .client-item p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .client-item button {
+            padding: 8px 15px;
+            background-color: #e942f5;
             color: #fff;
             border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .client-item button:hover {
+            background-color: #d133e3;
+        }
+
+
+        /* Estilizando os campos de texto */
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            background-color: white;
+            border: none;
+            padding: 15px;
+            margin-bottom: 10px;
+            width: 100%;
+            border-radius: 5px;
+            outline: none;
+            width: 100%;
+            max-height: 200px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            box-sizing: border-box;
+            resize: vertical;
+
+        }
+
+        textarea {
+            max-height: 200px;
+            min-height: 100px;
         }
     </style>
 </head>
+
 <body>
     <div id="menu">
         <h2>PERFUMARIA</h2>
@@ -178,20 +278,26 @@
 
         <!-- Lista de clientes -->
         <div class="client-list" id="clientList">
-            <% if (clientes.length > 0) { %>
-                <% clientes.forEach(cliente => { %>
+            <% if (clientes.length> 0) { %>
+                <% clientes.forEach(cliente=> { %>
                     <div class="client-item">
-                        <p><strong><%= cliente.nome %></strong></p>
-                        <p>Descrição: <%= cliente.idade %></p>
-                        <p>Preço: <%= cliente.email %></p>
-                        <p>Estoque: <%= cliente.endereco %></p>
-                        <p>Categoria: <%= cliente.telefone %></p>
+                        <p><strong>
+                                <%= cliente.nome %>
+                            </strong></p>
+                        <p>Descrição: <%= cliente.idade %>
+                        </p>
+                        <p>Preço: <%= cliente.email %>
+                        </p>
+                        <p>Estoque: <%= cliente.endereco %>
+                        </p>
+                        <p>Categoria: <%= cliente.telefone %>
+                        </p>
                         <button onclick="deleteClient(cliente.id)">Deletar</button>
                     </div>
-                <% }); %>
-            <% } else { %>
-                <p>Nenhum cliente encontrado.</p>
-            <% } %>
+                    <% }); %>
+                        <% } else { %>
+                            <p>Nenhum cliente encontrado.</p>
+                            <% } %>
         </div>
     </div>
 
@@ -222,28 +328,28 @@
         }
 
         document.getElementById('createClientForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
 
-            if (!response.ok) {
-                throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
+                }
+
+                e.target.reset();
+                fetchClients();
+            } catch (error) {
+                console.error('Erro ao criar cliente:', error);
+                alert('Erro ao criar o cliente. Verifique os dados e tente novamente.');
             }
-
-            e.target.reset();
-            fetchClients();
-        } catch (error) {
-            console.error('Erro ao criar cliente:', error);
-            alert('Erro ao criar o cliente. Verifique os dados e tente novamente.');
-        }
         });
 
         // Função para deletar cliente
@@ -257,4 +363,5 @@
     </script>
     <script src="/js/script.js"></script>
 </body>
+
 </html>

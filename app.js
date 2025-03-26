@@ -37,6 +37,11 @@ app.get('/api/produtos', async (req, res) => {
     }
 });
 
+// Rota para a página "Sobre"
+app.get('/sobre', (req, res) => {
+    res.render('sobre'); // Renderiza o arquivo sobre.ejs
+});
+
 app.post('/api/produtos', async (req, res) => {
     const { nome, imagem, descricao, preco, quantidadeEstoque, categoria } = req.body;
 
