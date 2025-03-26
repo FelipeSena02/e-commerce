@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendedores</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #fff;
+            color: #e942f5;
+            padding: 15px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #menu a {
+            color: #000;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .form-container {
+            margin: 20px 0;
+        }
+
+        .form-container input,
+        .form-container textarea {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .form-container button {
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .vendor-list {
+            margin: 20px 0;
+        }
+
+        .vendor-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .vendor-item button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <h2>PERFUMARIA</h2>
+        <a href="/">Inicial</a><br><br>
+        <a href="/vendas">Vendas</a><br><br>
+        <a href="/produtos">Produtos</a><br><br>
+        <a href="/clientes">Clientes</a><br><br>
+        <a href="/vendedores">Vendedores</a><br><br>
+        <a href="/sobre">Sobre</a>
+    </div>
+
+    <div class="content">
+        <h1>Gerenciar Vendedores</h1>
+
+        <!-- Formulário de criação de vendedor -->
+        <div class="form-container">
+            <h2>Criar Vendedor</h2>
+            <form id="createVendorForm">
+                <input type="text" name="nome" placeholder="Nome do vendedor" required>
+                <input type="number" name="idade" placeholder="Idade do vendedor" step="0.01">
+                <input type="text" name="email" placeholder="Email do vendedor" required>
+                <input type="text" name="telefone" placeholder="Telefone do vendedor" required>
+                <button type="submit">Criar Vendedor</button>
+            </form>
+        </div>
+
+        <!-- Lista de vendedores -->
+        <div class="vendor-list" id="vendorList">
+            <% if (vendedores.length > 0) { %>
+                <% vendedores.forEach(vendedor => { %>
+                    <div class="vendor-item">
+                        <p><strong><%= vendedor.nome %></strong></p>
+                        <p>Descrição: <%= vendedor.idade %></p>
+                        <p>Preço: <%= vendedor.email %></p>
+                        <p>Categoria: <%= vendedor.telefone %></p>
+                        <button onclick="deleteVendor(vendedor.id)">Deletar</button>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Nenhum vendedor encontrado.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = '/api/vendedores';
+
+        // Função para listar vendedores
+        async function fetchVendors() {
+            const response = await fetch(apiUrl);
+            const vendors = await response.json();
+            console.log(vendors);
+            const vendorList = document.getElementById('vendorList');
+            vendorList.innerHTML = '';
+
+            vendors.forEach(vendor => {
+                const vendorItem = document.createElement('div');
+                vendorItem.className = 'vendor-item';
+                vendorItem.innerHTML = `
+                    <p><strong>${vendor.nome}</strong></p>
+                    <p>Idade: ${vendor.idade}</p>
+                    <p>Email: ${vendor.email}</p>
+                    <p>Telefone: ${vendor.telefone}</p>
+                    <button onclick="deleteVendor(${vendor.id})">Deletar</button>
+                `;
+                vendorList.appendChild(vendorItem);
+            });
+        }
+
+        document.getElementById('createVendorForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
+            }
+
+            e.target.reset();
+            fetchVendors();
+        } catch (error) {
+            console.error('Erro ao criar vendedor:', error);
+            alert('Erro ao criar o vendedor. Verifique os dados e tente novamente.');
+        }
+        });
+
+        // Função para deletar vendedor
+        async function deleteVendor(id) {
+            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            fetchVendors();
+        }
+
+        // Carrega os vendedores ao iniciar
+        fetchVendors();
+    </script>
+</body>
+</html>

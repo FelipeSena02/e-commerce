@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #fff;
+            color: #e942f5;
+            padding: 15px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #menu a {
+            color: #000;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .form-container {
+            margin: 20px 0;
+        }
+
+        .form-container input,
+        .form-container textarea {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .form-container button {
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .product-list {
+            margin: 20px 0;
+        }
+
+        .product-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .product-item button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <h2>PERFUMARIA</h2>
+        <a href="/">Inicial</a><br><br>
+        <a href="/vendas">Vendas</a><br><br>
+        <a href="/produtos">Produtos</a><br><br>
+        <a href="/clientes">Clientes</a><br><br>
+        <a href="/vendedores">Vendedores</a><br><br>
+        <a href="/sobre">Sobre</a>
+    </div>
+
+    <div class="content">
+        <h1>Gerenciar Produtos</h1>
+
+        <!-- Formulário de criação de produto -->
+        <div class="form-container">
+            <h2>Criar Produto</h2>
+            <form id="createProductForm">
+                <input type="text" name="nome" placeholder="Nome do produto" required>
+                <input type="text" name="imagem" placeholder="URL da imagem">
+                <textarea name="descricao" placeholder="Descrição do produto"></textarea>
+                <input type="number" name="preco" placeholder="Preço" step="0.01" required>
+                <input type="number" name="quantidadeEstoque" placeholder="Quantidade em estoque" required>
+                <input type="text" name="categoria" placeholder="Categoria">
+                <button type="submit">Criar Produto</button>
+            </form>
+        </div>
+
+        <!-- Lista de produtos -->
+        <div class="product-list" id="productList">
+            <% if (produtos.length > 0) { %>
+                <% produtos.forEach(produto => { %>
+                    <div class="product-item">
+                        <p><strong><%= produto.nome %></strong></p>
+                        <p>Descrição: <%= produto.descricao %></p>
+                        <p>Preço: R$ <%= produto.preco ? produto.preco.toFixed(2) : 'Não disponível' %></p>
+                        <p>Estoque: <%= produto.quantidadeEstoque %></p>
+                        <p>Categoria: <%= produto.categoria %></p>
+                        <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" style="max-width: 200px;">
+                        <button onclick="deleteProduct(produto.id)">Deletar</button>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Nenhum produto encontrado.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = '/api/produtos';
+
+        // Função para listar produtos
+        async function fetchProducts() {
+            const response = await fetch(apiUrl);
+            const products = await response.json();
+            console.log(products);
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <p><strong>${product.nome}</strong></p>
+                    <p>Descrição: ${product.descricao}</p>
+                    <p>Preço: R$ ${product.preco.toFixed(2)}</p>
+                    <p>Estoque: ${product.quantidadeEstoque}</p>
+                    <p>Categoria: ${product.categoria}</p>
+                    <img src="${product.imagem}" alt="${product.nome}" style="max-width: 200px;">
+                    <button onclick="deleteProduct(${product.id})">Deletar</button>
+                `;
+                productList.appendChild(productItem);
+            });
+        }
+
+        document.getElementById('createProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
+            }
+
+            e.target.reset();
+            fetchProducts();
+        } catch (error) {
+            console.error('Erro ao criar produto:', error);
+            alert('Erro ao criar o produto. Verifique os dados e tente novamente.');
+        }
+        });
+
+        // Função para deletar produto
+        async function deleteProduct(id) {
+            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            fetchProducts();
+        }
+
+        // Carrega os produtos ao iniciar
+        fetchProducts();
+    </script>
+</body>
+</html>
