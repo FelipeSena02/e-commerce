@@ -16,6 +16,11 @@ app.set('views', path.join(__dirname, 'views'));
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+// Rota para a página "Sobre"
+app.get('/sobre', (req, res) => {
+    res.render('about'); // Renderiza o arquivo sobre.ejs
+});
+
 app.get('/', async (req, res) => {
     const produtos = await prisma.produto.findMany();
     res.render('home', { produtos });
@@ -156,6 +161,97 @@ app.delete('/api/vendedores/:id', async (req, res) => {
     }
 });
 
+// Rota para renderizar a página de vendas
+app.get('/vendas', async (req, res) => {
+    try {
+        const vendas = await prisma.venda.findMany({
+            include: {
+                cliente: true,
+                vendedor: true,
+                itensVenda: {
+                    include: {
+                        produto: true
+                    }
+                }
+            }
+        });
+        res.render('sales', { vendas }); // Renderiza o arquivo sales.ejs com as vendas
+    } catch (error) {
+        console.error('Erro ao buscar vendas:', error);
+        res.status(500).send('Erro ao carregar a página de vendas.');
+    }
+});
+
+// Rota para a API de vendas (retorna JSON)
+app.get('/api/vendas', async (req, res) => {
+    try {
+        const vendas = await prisma.venda.findMany({
+            include: {
+                cliente: true,
+                vendedor: true,
+                itensVenda: {
+                    include: {
+                        produto: true
+                    }
+                }
+            }
+        });
+        res.status(200).json(vendas);
+    } catch (error) {
+        console.error('Erro ao buscar vendas:', error);
+        res.status(500).json({ error: 'Erro ao buscar vendas.' });
+    }
+});
+
+app.post('/api/vendas', async (req, res) => {
+    const { idCliente, idVendedor, itensVenda } = req.body;
+
+    // Validação básica
+    if (!idCliente || !idVendedor || !itensVenda || !Array.isArray(itensVenda)) {
+        return res.status(400).json({ error: 'Campos obrigatórios estão faltando.' });
+    }
+
+    try {
+        let total = 0;
+        itensVenda.forEach(item => {
+            total += item.quantidade * item.precoUnitario;
+        });
+
+        const novaVenda = await prisma.venda.create({
+            data: {
+                idCliente,
+                idVendedor,
+                total,
+                itensVenda: {
+                    create: itensVenda.map(item => ({
+                        idProduto: item.idProduto,
+                        quantidade: item.quantidade,
+                        precoUnitario: item.precoUnitario
+                    }))
+                }
+            }
+        });
+
+        res.status(201).json(novaVenda);
+    } catch (error) {
+        console.error('Erro ao criar venda:', error);
+        res.status(500).json({ error: 'Erro ao criar a venda.' });
+    }
+});
+
+app.delete('/api/vendas/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await prisma.venda.delete({
+            where: { id: parseInt(id) }
+        });
+        res.status(204).send(); // Código HTTP 204 indica sucesso sem conteúdo
+    } catch (error) {
+        console.error('Erro ao deletar venda:', error);
+        res.status(500).json({ error: 'Erro ao deletar a venda.' });
+    }
+});
+
 // Configurando rotas
 const produtoRoute = require('./routes/produtoRoute');
 app.use('/produtos', produtoRoute);
@@ -163,6 +259,8 @@ const clienteRoute = require('./routes/clienteRoute');
 app.use('/clientes', clienteRoute);
 const vendedorRoute = require('./routes/vendedorRoute');
 app.use('/vendedores', vendedorRoute);
+const vendasRoute  = require('./routes/vendaRoute')
+app.use('/vendas', vendasRoute);
 
 // Porta de execução
 const PORT = process.env.PORT || 3000;

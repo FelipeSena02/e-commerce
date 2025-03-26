@@ -138,14 +138,14 @@
         }
 
 
-        .product-list {
+        .sale-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             margin: 20px 0;
         }
 
-        .product-item {
+        .sale-item {
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 15px;
@@ -154,12 +154,12 @@
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .product-item:hover {
+        .sale-item:hover {
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .product-item img {
+        .sale-item img {
             width: 150px;
             /* Defina um tamanho fixo para todas as imagens */
             height: 150px;
@@ -171,12 +171,12 @@
         }
 
 
-        .product-item p {
+        .sale-item p {
             margin: 5px 0;
             font-size: 14px;
         }
 
-        .product-item button {
+        .sale-item button {
             padding: 8px 15px;
             background-color: #e942f5;
             color: #fff;
@@ -186,7 +186,7 @@
             transition: background-color 0.3s;
         }
 
-        .product-item button:hover {
+        .sale-item button:hover {
             background-color: #d133e3;
         }
 
@@ -242,97 +242,152 @@
             <img src="/images/home 2.svg" alt="Ícone Inicial" class="menu-icon"> Home
         </a><br><br>
         <a href="/vendas" id="vendas" onclick="changeIcon(this)">
-            <img src="/images/vend 2.svg" alt="Ícone vendas" class="menu-icon2"> Vendas
+            <img src="/images/vend 2.svg" alt="Ícone Vendas" class="menu-icon2"> Vendas
         </a><br><br>
         <a href="/produtos" id="produtos" onclick="changeIcon(this)">
-            <img src="/images/prod 2.svg" alt="Ícone produtos" class="menu-icon3">Perfumes
+            <img src="/images/prod 2.svg" alt="Ícone Produtos" class="menu-icon3"> Perfumes
         </a><br><br>
         <a href="/clientes" id="clientes" onclick="changeIcon(this)">
-            <img src="/images/client 2.svg" alt="Ícone clientes" class="menu-icon4"> Clientes
+            <img src="/images/client 2.svg" alt="Ícone Clientes" class="menu-icon4"> Clientes
         </a><br><br>
         <a href="/vendedores" id="vendedores" onclick="changeIcon(this)">
-            <img src="/images/vendedor 2.svg" alt="Ícone vendedores" class="menu-icon5"> Vendedores
+            <img src="/images/vendedor 2.svg" alt="Ícone Vendedores" class="menu-icon5"> Vendedores
         </a><br><br>
         <a href="/sobre" id="sobre" onclick="changeIcon(this)">
-            <img src="/images/sobre 2.svg" alt="Ícone sobre" class="menu-icon6"> Sobre
+            <img src="/images/sobre 2.svg" alt="Ícone Sobre" class="menu-icon6"> Sobre
         </a><br><br>
     </div>
 
     <div class="content">
-        <h1>Gerenciar Produtos</h1>
+        <img src="/images/cart.svg" alt="Ícone Carrinho" width="80" height="auto"> <h1>Carrinho de Compras</h1>
 
-        <!-- Formulário de criação de produto -->
+        <!-- Formulário de criação de venda -->
         <div class="form-container">
-            <h2>Criar Produto</h2>
-            <form id="createProductForm">
-                <input type="text" name="nome" placeholder="Nome do produto" required>
-                <input type="text" name="imagem" placeholder="URL da imagem">
-                <textarea name="descricao" placeholder="Descrição do produto"></textarea>
-                <input type="number" name="preco" placeholder="Preço" step="0.01" required>
-                <input type="number" name="quantidadeEstoque" placeholder="Quantidade em estoque" required>
-                <input type="text" name="categoria" placeholder="Categoria">
-                <button type="submit">Criar Produto</button>
+            <h2>Criar Venda</h2>
+            <form id="createSaleForm">
+                <input type="number" name="idCliente" placeholder="ID do Cliente" required>
+                <input type="number" name="idVendedor" placeholder="ID do Vendedor" required>
+        
+                <h3>Itens da Venda</h3>
+                <div id="itemFields">
+                    <!-- Campos para o primeiro item -->
+                    <div class="item">
+                        <input type="number" name="idProduto" placeholder="ID do Produto" required>
+                        <input type="number" name="quantidade" placeholder="Quantidade" required>
+                        <input type="number" name="precoUnitario" placeholder="Preço Unitário" step="0.01" required>
+                        <button type="button" onclick="removeItem(this)">Remover Item</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addItem()">Adicionar Item</button>
+        
+                <button type="submit">Criar Venda</button>
             </form>
         </div>
 
-        <!-- Lista de produtos -->
-        <div class="product-list" id="productList">
-            <% if (produtos.length > 0) { %>
-                <% produtos.forEach(produto => { %>
-                    <div class="product-item">
-                        <p><strong><%= produto.nome %></strong></p>
-                        <p>Descrição: <%= produto.descricao %></p>
-                        <p>Preço: R$ <%= produto.preco ? produto.preco.toFixed(2) : 'Não disponível' %></p>
-                        <p>Estoque: <%= produto.quantidadeEstoque %></p>
-                        <p>Categoria: <%= produto.categoria %></p>
-                        <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" style="max-width: 200px;">
-                        <button onclick="deleteProduct(produto.id)">Deletar</button>
+        <!-- Lista de vendas -->
+        <div class="sale-list" id="saleList">
+            <% if (vendas.length > 0) { %>
+                <% vendas.forEach(venda => { %>
+                    <div class="sale-item">
+                        <p><strong>Venda ID: <%= venda.id %></strong></p>
+                        <p>Cliente: <%= venda.cliente.nome %></p>
+                        <p>Vendedor: <%= venda.vendedor.nome %></p>
+                        <p>Data: <%= venda.dataVenda.toLocaleString() %></p>
+                        <p>Total: R$ <%= venda.total.toFixed(2) %></p>
+                        <ul>
+                            <% venda.itensVenda.forEach(item => { %>
+                                <li>
+                                    Produto: <%= item.produto.nome %> - 
+                                    Quantidade: <%= item.quantidade %> - 
+                                    Preço Unitário: R$ <%= item.precoUnitario.toFixed(2) %>
+                                </li>
+                            <% }); %>
+                        </ul>
+                        <button onclick="deleteSale(venda.id)">Deletar</button>
                     </div>
                 <% }); %>
             <% } else { %>
-                <p>Nenhum produto encontrado.</p>
+                <p>Nenhuma venda encontrada.</p>
             <% } %>
         </div>
     </div>
 
     <script>
-        const apiUrl = '/api/produtos';
+        const apiUrl = '/vendas';
 
-        // Função para listar produtos
-        async function fetchProducts() {
+        // Função para listar vendas
+        async function fetchSales() {
             const response = await fetch(apiUrl);
-            const products = await response.json();
-            console.log(products);
-            const productList = document.getElementById('productList');
-            productList.innerHTML = '';
+            const sales = await response.json();
+            const saleList = document.getElementById('saleList');
+            saleList.innerHTML = '';
 
-            products.forEach(product => {
-                const productItem = document.createElement('div');
-                productItem.className = 'product-item';
-                productItem.innerHTML = `
-                    <p><strong>${product.nome}</strong></p>
-                    <p>Descrição: ${product.descricao}</p>
-                    <p>Preço: R$ ${product.preco.toFixed(2)}</p>
-                    <p>Estoque: ${product.quantidadeEstoque}</p>
-                    <p>Categoria: ${product.categoria}</p>
-                    <img src="${product.imagem}" alt="${product.nome}" style="max-width: 200px;">
-                    <button onclick="deleteProduct(${product.id})">Deletar</button>
+            sales.forEach(sale => {
+                const saleItem = document.createElement('div');
+                saleItem.className = 'sale-item';
+                saleItem.innerHTML = `
+                    <p><strong>Venda ID: ${sale.id}</strong></p>
+                    <p>Cliente: ${sale.cliente.nome}</p>
+                    <p>Vendedor: ${sale.vendedor.nome}</p>
+                    <p>Data: ${new Date(sale.dataVenda).toLocaleString()}</p>
+                    <p>Total: R$ ${sale.total.toFixed(2)}</p>
+                    <ul>
+                        ${sale.itensVenda.map(item => `
+                            <li>Produto: ${item.produto.nome} - 
+                                Quantidade: ${item.quantidade} - 
+                                Preço Unitário: R$ ${item.precoUnitario.toFixed(2)}
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <button onclick="deleteSale(${sale.id})">Deletar</button>
                 `;
-                productList.appendChild(productItem);
+                saleList.appendChild(saleItem);
             });
         }
 
-        document.getElementById('createProductForm').addEventListener('submit', async (e) => {
+        // Função para adicionar campos para um novo item
+    function addItem() {
+        const itemFields = document.getElementById('itemFields');
+
+        const newItem = document.createElement('div');
+        newItem.className = 'item';
+        newItem.innerHTML = `
+            <input type="number" name="idProduto" placeholder="ID do Produto" required>
+            <input type="number" name="quantidade" placeholder="Quantidade" required>
+            <input type="number" name="precoUnitario" placeholder="Preço Unitário" step="0.01" required>
+            <button type="button" onclick="removeItem(this)">Remover Item</button>
+        `;
+
+        itemFields.appendChild(newItem);
+    }
+
+    // Função para remover campos de um item
+    function removeItem(button) {
+        button.parentElement.remove();
+    }
+
+    document.getElementById('createSaleForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
 
+        // Capturar os valores de itensVenda separadamente
+        const itemElements = document.querySelectorAll('#itemFields .item');
+        const itensVenda = Array.from(itemElements).map(item => ({
+            idProduto: parseInt(item.querySelector('[name="idProduto"]').value),
+            quantidade: parseInt(item.querySelector('[name="quantidade"]').value),
+            precoUnitario: parseFloat(item.querySelector('[name="precoUnitario"]').value),
+        }));
+
+        // Enviar para a API
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch('/api/vendas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                    idCliente: parseInt(formData.get('idCliente')),
+                    idVendedor: parseInt(formData.get('idVendedor')),
+                    itensVenda: itensVenda
+                }),
             });
 
             if (!response.ok) {
@@ -340,21 +395,22 @@
             }
 
             e.target.reset();
-            fetchProducts();
+            document.getElementById('itemFields').innerHTML = ''; // Limpa os campos
+            addItem(); // Adiciona o primeiro campo vazio
         } catch (error) {
-            console.error('Erro ao criar produto:', error);
-            alert('Erro ao criar o produto. Verifique os dados e tente novamente.');
+            console.error('Erro ao criar venda:', error);
+            alert('Erro ao criar a venda. Tente novamente.');
         }
-        });
+    });
 
-        // Função para deletar produto
-        async function deleteProduct(id) {
+        // Função para deletar venda
+        async function deleteSale(id) {
             await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
-            fetchProducts();
+            fetchSales();
         }
 
-        // Carrega os produtos ao iniciar
-        fetchProducts();
+        // Carrega as vendas ao iniciar
+        fetchSales();
     </script>
     <script src="/js/script.js"></script>
 </body>

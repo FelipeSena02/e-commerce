@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre a perfumaria</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        #menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 200px;
+            background-color: #fff;
+            color: #CE67B7;
+            padding: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #menu a {
+            color: #000;
+            text-decoration: none;
+            margin: 0;
+            padding: 12px 15px;
+            display: block;
+            align-items: center;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 18px;
+            margin-bottom: -10px;
+        }
+
+        #menu h2 {
+            margin-bottom: 20px;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #menu a i {
+            margin-right: 30px;
+            transition: color 0.3s;
+        }
+
+        #menu a:hover {
+            background-color: #CE67B7;
+            color: white;
+        }
+
+        #menu a.active {
+            background-color: #CE67B7;
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        #menu a.active .menu-icon {
+            content: url("/images/home 1.svg");
+        }
+
+        #menu a.active .menu-icon2 {
+            content: url("/images/vend 1.svg");
+        }
+
+        #menu a.active .menu-icon3 {
+            content: url("/images/prod 1.svg");
+        }
+
+        #menu a.active .menu-icon4 {
+            content: url("/images/client 1.svg");
+        }
+
+        #menu a.active .menu-icon5 {
+            content: url("/images/vendedor 1.svg");
+        }
+
+        #menu a.active .menu-icon6 {
+            content: url("/images/sobre 1.svg");
+        }
+
+        #menu a img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        #menu a.active i {
+            color: white;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .about-text {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .about-text strong {
+            color: #CE67B7;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+        }
+
+        h1 {
+            text-align: left;
+        }
+
+        .contato-info a {
+            color: #CE67B7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Menu lateral -->
+    <div id="menu">
+        <h2>La Belle Essence</h2>
+        <a href="/" id="home" onclick="changeIcon(this)">
+            <img src="/images/home 2.svg" alt="Ícone Inicial" class="menu-icon"> Home
+        </a><br><br>
+        <a href="/vendas" id="vendas" onclick="changeIcon(this)">
+            <img src="/images/vend 2.svg" alt="Ícone vendas" class="menu-icon2"> Vendas
+        </a><br><br>
+        <a href="/produtos" id="produtos" onclick="changeIcon(this)">
+            <img src="/images/prod 2.svg" alt="Ícone produtos" class="menu-icon3"> Perfumes
+        </a><br><br>
+        <a href="/clientes" id="clientes" onclick="changeIcon(this)">
+            <img src="/images/client 2.svg" alt="Ícone clientes" class="menu-icon4"> Clientes
+        </a><br><br>
+        <a href="/vendedores" id="vendedores" onclick="changeIcon(this)">
+            <img src="/images/vendedor 2.svg" alt="Ícone vendedores" class="menu-icon5"> Vendedores
+        </a><br><br>
+        <a href="/sobre" id="sobre" onclick="changeIcon(this)">
+            <img src="/images/sobre 2.svg" alt="Ícone sobre" class="menu-icon6"> Sobre
+        </a><br><br>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <div class="content">
+        <h1>Informações sobre a perfumaria</h1>
+
+        <p><strong style="color: #CE67B7;  font-weight: bold;">La Belle Essence</strong> nasceu da paixão de Isabela por
+            aromas e pela rica cultura cearense. Mais do que uma perfumaria, somos um espaço dedicado à valorização dos
+            sentidos, combinando tradição e inovação na criação de fragrâncias únicas.</p>
+
+        <p>Priorizamos ingredientes selecionados e parcerias com produtores locais, promovendo uma cadeia sustentável
+            que fortalece a economia da região. Nossa loja, situada em um charmoso casarão colonial no coração de
+            Fortaleza, tornou-se um verdadeiro ponto cultural, onde a beleza e as essências do Ceará se encontram.</p>
+
+        <p>Descubra a arte da perfumaria com a <strong style="color: #CE67B7;  font-weight: bold;">La Belle
+                Essence</strong> e deixe-se envolver por fragrâncias que contam histórias.</p>
+
+        <div class="contact-info">
+            <h2>Informações de Contato</h2>
+            <p><strong>Emails:</strong></p>
+            <p><a href="mailto:contato@labelleessence.com.br">contato@labelleessence.com.br</a></p>
+            <p><a href="mailto:vendas@labelleessence.com.br">vendas@labelleessence.com.br</a></p>
+            <p><a href="mailto:info@labelleessence.com.br">info@labelleessence.com.br</a></p>
+            <p><a href="mailto:support@labelleessence.com.br">suporte@labelleessence.com.br</a></p>
+
+            <p><strong>Telefones:</strong></p>
+            <p>(85) 99999-1234 (WhatsApp)</p>
+            <p>WhatsApp Business: (85) 98888-4321, (85) 98765-6789</p>
+
+            <p><strong>Endereço:</strong></p>
+            <p>Centro Municipal de Pequenos Negócios - Beco da Poeira, Avenida Imperador, 546 - Centro, Fortaleza - CE,
+                60015-050</p>
+
+            <p><strong>Redes Sociais:</strong></p>
+            <p>Instagram: <a href="https://instagram.com/labelle_essence" target="_blank">@labelle_essence</a></p>
+            <p>Facebook: <a href="https://facebook.com/LaBelleEssencePerfumaria" target="_blank">La Belle Essence -
+                    Perfumaria</a></p>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+
+</html>
