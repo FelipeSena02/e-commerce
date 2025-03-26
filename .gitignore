@@ -1,0 +1,18 @@
+# Ignorar a pasta node_modules, que contém as dependências do projeto
+node_modules/
+
+# Ignorar arquivos e pastas gerados pelo Prisma
+.prisma/
+
+# Ignorar o arquivo de lock do npm (package-lock.json)
+package-lock.json
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos temporários do sistema operacional
+.DS_Store  # Para macOS
+Thumbs.db  # Para Windows
+
+# Ignorar qualquer outro arquivo temporário ou de configuração que não seja relevante para o repositório
+*.env  # Caso você tenha arquivos de ambiente com variáveis sensíveis

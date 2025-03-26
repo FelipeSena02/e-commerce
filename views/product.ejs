@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Produtos</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
@@ -64,6 +63,10 @@
             font-weight: bold;
         }
 
+        #menu a.active i {
+            color: white;
+        }
+
         #menu a.active .menu-icon {
             content: url("/images/home 1.svg");
         }
@@ -87,10 +90,6 @@
             width: 20px;
             height: 20px;
             margin-right: 10px;
-        }
-
-        #menu a.active i {
-            color: white;
         }
 
         .content {
@@ -137,9 +136,7 @@
         }
     </style>
 </head>
-
 <body>
-    <!-- Menu lateral -->
     <div id="menu">
         <h2>PERFUMARIA</h2>
         <a href="/" id="home" onclick="changeIcon(this)">
@@ -149,7 +146,7 @@
             <img src="/images/vend 2.svg" alt="Ícone vendas" class="menu-icon2"> Vendas
         </a><br><br>
         <a href="/produtos" id="produtos" onclick="changeIcon(this)">
-            <img src="/images/prod 2.svg" alt="Ícone produtos" class="menu-icon3"> Perfumes
+            <img src="/images/prod 2.svg" alt="Ícone produtos" class="menu-icon3">Perfumes
         </a><br><br>
         <a href="/clientes" id="clientes" onclick="changeIcon(this)">
             <img src="/images/client 2.svg" alt="Ícone clientes" class="menu-icon4"> Clientes
@@ -162,18 +159,104 @@
         </a><br><br>
     </div>
 
-    <!-- Conteúdo principal -->
     <div class="content">
-        <h1>Produtos</h1>
-        <ul id="productList">
-            <% produtos.forEach(produto=> { %>
-                <li>
-                    <%= produto.nome %> - R$ <%= produto.preco.toFixed(2) %>
-                </li>
+        <h1>Gerenciar Produtos</h1>
+
+        <!-- Formulário de criação de produto -->
+        <div class="form-container">
+            <h2>Criar Produto</h2>
+            <form id="createProductForm">
+                <input type="text" name="nome" placeholder="Nome do produto" required>
+                <input type="text" name="imagem" placeholder="URL da imagem">
+                <textarea name="descricao" placeholder="Descrição do produto"></textarea>
+                <input type="number" name="preco" placeholder="Preço" step="0.01" required>
+                <input type="number" name="quantidadeEstoque" placeholder="Quantidade em estoque" required>
+                <input type="text" name="categoria" placeholder="Categoria">
+                <button type="submit">Criar Produto</button>
+            </form>
+        </div>
+
+        <!-- Lista de produtos -->
+        <div class="product-list" id="productList">
+            <% if (produtos.length > 0) { %>
+                <% produtos.forEach(produto => { %>
+                    <div class="product-item">
+                        <p><strong><%= produto.nome %></strong></p>
+                        <p>Descrição: <%= produto.descricao %></p>
+                        <p>Preço: R$ <%= produto.preco ? produto.preco.toFixed(2) : 'Não disponível' %></p>
+                        <p>Estoque: <%= produto.quantidadeEstoque %></p>
+                        <p>Categoria: <%= produto.categoria %></p>
+                        <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" style="max-width: 200px;">
+                        <button onclick="deleteProduct(produto.id)">Deletar</button>
+                    </div>
                 <% }); %>
-        </ul>
+            <% } else { %>
+                <p>Nenhum produto encontrado.</p>
+            <% } %>
+        </div>
     </div>
+
+    <script>
+        const apiUrl = '/api/produtos';
+
+        // Função para listar produtos
+        async function fetchProducts() {
+            const response = await fetch(apiUrl);
+            const products = await response.json();
+            console.log(products);
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <p><strong>${product.nome}</strong></p>
+                    <p>Descrição: ${product.descricao}</p>
+                    <p>Preço: R$ ${product.preco.toFixed(2)}</p>
+                    <p>Estoque: ${product.quantidadeEstoque}</p>
+                    <p>Categoria: ${product.categoria}</p>
+                    <img src="${product.imagem}" alt="${product.nome}" style="max-width: 200px;">
+                    <button onclick="deleteProduct(${product.id})">Deletar</button>
+                `;
+                productList.appendChild(productItem);
+            });
+        }
+
+        document.getElementById('createProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
+            }
+
+            e.target.reset();
+            fetchProducts();
+        } catch (error) {
+            console.error('Erro ao criar produto:', error);
+            alert('Erro ao criar o produto. Verifique os dados e tente novamente.');
+        }
+        });
+
+        // Função para deletar produto
+        async function deleteProduct(id) {
+            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            fetchProducts();
+        }
+
+        // Carrega os produtos ao iniciar
+        fetchProducts();
+    </script>
     <script src="/js/script.js"></script>
 </body>
-
 </html>

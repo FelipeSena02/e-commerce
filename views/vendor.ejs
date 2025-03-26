@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Vendedores</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
@@ -137,9 +136,7 @@
         }
     </style>
 </head>
-
 <body>
-    <!-- Menu lateral -->
     <div id="menu">
         <h2>PERFUMARIA</h2>
         <a href="/" id="home" onclick="changeIcon(this)">
@@ -162,18 +159,98 @@
         </a><br><br>
     </div>
 
-    <!-- Conteúdo principal -->
     <div class="content">
-        <h1>Produtos</h1>
-        <ul id="productList">
-            <% produtos.forEach(produto=> { %>
-                <li>
-                    <%= produto.nome %> - R$ <%= produto.preco.toFixed(2) %>
-                </li>
+        <h1>Gerenciar Vendedores</h1>
+
+        <!-- Formulário de criação de vendedor -->
+        <div class="form-container">
+            <h2>Criar Vendedor</h2>
+            <form id="createVendorForm">
+                <input type="text" name="nome" placeholder="Nome do vendedor" required>
+                <input type="number" name="idade" placeholder="Idade do vendedor" step="0.01">
+                <input type="text" name="email" placeholder="Email do vendedor" required>
+                <input type="text" name="telefone" placeholder="Telefone do vendedor" required>
+                <button type="submit">Criar Vendedor</button>
+            </form>
+        </div>
+
+        <!-- Lista de vendedores -->
+        <div class="vendor-list" id="vendorList">
+            <% if (vendedores.length > 0) { %>
+                <% vendedores.forEach(vendedor => { %>
+                    <div class="vendor-item">
+                        <p><strong><%= vendedor.nome %></strong></p>
+                        <p>Descrição: <%= vendedor.idade %></p>
+                        <p>Preço: <%= vendedor.email %></p>
+                        <p>Categoria: <%= vendedor.telefone %></p>
+                        <button onclick="deleteVendor(vendedor.id)">Deletar</button>
+                    </div>
                 <% }); %>
-        </ul>
+            <% } else { %>
+                <p>Nenhum vendedor encontrado.</p>
+            <% } %>
+        </div>
     </div>
+
+    <script>
+        const apiUrl = '/api/vendedores';
+
+        // Função para listar vendedores
+        async function fetchVendors() {
+            const response = await fetch(apiUrl);
+            const vendors = await response.json();
+            console.log(vendors);
+            const vendorList = document.getElementById('vendorList');
+            vendorList.innerHTML = '';
+
+            vendors.forEach(vendor => {
+                const vendorItem = document.createElement('div');
+                vendorItem.className = 'vendor-item';
+                vendorItem.innerHTML = `
+                    <p><strong>${vendor.nome}</strong></p>
+                    <p>Idade: ${vendor.idade}</p>
+                    <p>Email: ${vendor.email}</p>
+                    <p>Telefone: ${vendor.telefone}</p>
+                    <button onclick="deleteVendor(${vendor.id})">Deletar</button>
+                `;
+                vendorList.appendChild(vendorItem);
+            });
+        }
+
+        document.getElementById('createVendorForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        console.log('Dados enviados:', data); // Exibe os dados enviados no console do navegador
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
+            }
+
+            e.target.reset();
+            fetchVendors();
+        } catch (error) {
+            console.error('Erro ao criar vendedor:', error);
+            alert('Erro ao criar o vendedor. Verifique os dados e tente novamente.');
+        }
+        });
+
+        // Função para deletar vendedor
+        async function deleteVendor(id) {
+            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            fetchVendors();
+        }
+
+        // Carrega os vendedores ao iniciar
+        fetchVendors();
+    </script>
     <script src="/js/script.js"></script>
 </body>
-
 </html>
